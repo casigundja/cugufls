@@ -1,0 +1,13 @@
+<!DOCTYPE html><html lang="pt"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Acesso — Família Gundja</title>@vite('resources/js/app.js')</head><body><main class="auth-shell"><div class="auth-card"><a href="/" class="brand"><span class="brand-symbol">g<span>+</span></span><span>família gundja<small>CUGUFLS · GESTÃO</small></span></a>
+<h1>{{ ['login'=>'Bem-vindo de volta.','forgot'=>'Recuperar acesso.','reset'=>'Nova palavra-passe.','verify'=>'Verifique o seu email.','confirm'=>'Confirme o acesso.','two-factor'=>'Verificação de segurança.'][$mode] }}</h1><p>Uma plataforma para toda a família.</p>
+@if(session('status'))<div class="notice">{{ session('status') }}</div>@endif
+@if($errors->any())<div class="error-box" role="alert">@foreach($errors->all() as $error)<p>{{ $error }}</p>@endforeach</div>@endif
+<form method="post" action="{{ ['login'=>'/login','forgot'=>'/forgot-password','reset'=>'/reset-password','verify'=>'/email/verification-notification','confirm'=>'/user/confirm-password','two-factor'=>'/two-factor-challenge'][$mode] }}">@csrf
+@if(in_array($mode, ['login','forgot','reset']))<div class="field"><label for="email">Email</label><input id="email" name="email" type="email" value="{{ old('email', request('email', '')) }}" required autocomplete="username"></div>@endif
+@if(in_array($mode, ['login','reset','confirm']))<div class="field"><label for="password">Palavra-passe</label><input id="password" name="password" type="password" required autocomplete="{{ $mode === 'reset' ? 'new-password' : 'current-password' }}"></div>@endif
+@if($mode === 'reset')<input type="hidden" name="token" value="{{ $request->route('token') }}"><div class="field"><label for="password_confirmation">Confirmar palavra-passe</label><input id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password"></div>@endif
+@if($mode === 'two-factor')<div class="field"><label for="code">Código da aplicação autenticadora</label><input id="code" name="code" inputmode="numeric" autocomplete="one-time-code"></div><div class="field"><label for="recovery_code">Ou código de recuperação</label><input id="recovery_code" name="recovery_code" autocomplete="off"></div>@endif
+@if($mode === 'verify')<p>Enviámos um link de verificação. Consulte a caixa de entrada ou peça um novo email.</p>@endif
+<button class="button">{{ $mode === 'verify' ? 'Reenviar email' : 'Continuar' }} ↗</button></form>
+@if($mode === 'login')<a class="text-link" href="/forgot-password">Esqueci a palavra-passe</a>@endif
+<a class="text-link" href="/">Voltar ao website</a></div></main></body></html>

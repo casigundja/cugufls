@@ -1,0 +1,20 @@
+import {execFile} from 'node:child_process';
+import {promisify} from 'node:util';
+import {randomUUID} from 'node:crypto';
+import assert from 'node:assert/strict';
+const run=promisify(execFile);
+const env={...process.env,APP_ENV:'testing',DB_CONNECTION:'mysql',DB_HOST:'127.0.0.1',DB_PORT:'33079',DB_DATABASE:'cugufls_testing',DB_USERNAME:'root',DB_PASSWORD:'',DB_URL:'',CACHE_STORE:'array',QUEUE_CONNECTION:'sync',MAIL_MAILER:'array',BCRYPT_ROUNDS:'4'};
+async function worker(mode,data){const {stdout}=await run(process.env.PHP_BINARY||'php',['tests/mysql-worker.php',mode,...(data?[JSON.stringify(data)]:[])],{env,windowsHide:true});return JSON.parse(stdout);}
+const context=await worker('prepare');
+const exits=await Promise.all([1,2].map(()=>worker('adjust',{...context,quantity:'4',expected:'5',operation:randomUUID()})));
+assert.equal(exits.filter(r=>r.ok).length,1,'Duas saídas não podem consumir o último saldo');
+assert.equal((await worker('state')).quantity,'1.000');
+const replay={...context,quantity:'1',expected:'1',operation:randomUUID()};
+const replays=await Promise.all([worker('adjust',replay),worker('adjust',replay)]);
+assert.ok(replays.every(r=>r.ok));
+const order={...context,operation:randomUUID()};
+const orders=await Promise.all([worker('order',order),worker('order',order)]);
+assert.equal(orders[0].id,orders[1].id);
+const state=await worker('state');
+assert.deepEqual(state,{quantity:'0.000',movements:3,orders:1,customers:1});
+console.log(JSON.stringify({passed:true,checks:['saídas concorrentes','replay de movimento concorrente','pedido idempotente concorrente'],state}));

@@ -1,0 +1,466 @@
+erDiagram
+    segments {
+        bigint id PK
+        string name
+        string slug
+        text description
+        string icon
+        string image
+        boolean active
+        unsignedInteger sort_order
+    }
+    branches {
+        bigint id PK
+        string name
+        string slug
+        string city
+        string province
+        text address
+        string phone
+        string whatsapp
+        string email
+        latitude latitude
+        longitude longitude
+        json opening_hours
+        boolean active
+    }
+    branch_segment {
+        bigint id PK
+        bigint branch_id FK
+        bigint segment_id FK
+    }
+    branches ||--o{ branch_segment : "branch"
+    segments ||--o{ branch_segment : "segment"
+    user_accesses {
+        bigint id PK
+        bigint user_id FK
+        bigint role_id FK
+        bigint segment_id FK
+        bigint branch_id FK
+    }
+    users ||--o{ user_accesses : "user"
+    roles ||--o{ user_accesses : "role"
+    segments |o--o{ user_accesses : "segment"
+    branches |o--o{ user_accesses : "branch"
+    categories {
+        bigint id PK
+        bigint segment_id FK
+        bigint parent_id FK
+        string name
+        string slug
+        text description
+        string image
+        boolean active
+        unsignedInteger sort_order
+    }
+    segments ||--o{ categories : "segment"
+    categories |o--o{ categories : "parent"
+    brands {
+        bigint id PK
+        string name
+        string slug
+        string image
+        boolean active
+    }
+    products {
+        bigint id PK
+        bigint segment_id FK
+        bigint category_id FK
+        bigint brand_id FK
+        string name
+        string slug
+        string sku
+        string barcode
+        text short_description
+        text description
+        money price
+        money sale_price
+        money cost_price
+        string unit
+        string purchase_mode
+        boolean featured
+        boolean active
+    }
+    segments ||--o{ products : "segment"
+    categories ||--o{ products : "category"
+    brands |o--o{ products : "brand"
+    product_images {
+        bigint id PK
+        bigint product_id FK
+        string disk
+        string path
+        string alt
+        unsignedInteger sort_order
+    }
+    products ||--o{ product_images : "product"
+    inventories {
+        bigint id PK
+        bigint product_id FK
+        bigint branch_id FK
+        decimal quantity
+        decimal minimum_quantity
+        decimal maximum_quantity
+        timestamp last_counted_at
+    }
+    products ||--o{ inventories : "product"
+    branches ||--o{ inventories : "branch"
+    customers {
+        bigint id PK
+        string name
+        string phone
+        string email
+        string company
+        text notes
+    }
+    services {
+        bigint id PK
+        bigint segment_id FK
+        string name
+        string slug
+        text description
+        money price
+        string image
+        boolean active
+    }
+    segments ||--o{ services : "segment"
+    orders {
+        bigint id PK
+        string public_id
+        bigint segment_id FK
+        bigint branch_id FK
+        bigint customer_id FK
+        bigint assigned_to FK
+        string status
+        string source
+        string currency
+        money total
+        json customer_snapshot
+        text notes
+        string idempotency_key
+        string request_hash
+    }
+    segments ||--o{ orders : "segment"
+    branches ||--o{ orders : "branch"
+    customers ||--o{ orders : "customer"
+    users |o--o{ orders : "assignee"
+    order_items {
+        bigint id PK
+        bigint order_id FK
+        bigint product_id FK
+        bigint service_id FK
+        string name
+        string sku
+        string unit
+        decimal quantity
+        money unit_price
+        money line_total
+        json customization
+    }
+    orders ||--o{ order_items : "order"
+    products |o--o{ order_items : "product"
+    services |o--o{ order_items : "service"
+    order_status_histories {
+        bigint id PK
+        bigint order_id FK
+        bigint user_id FK
+        string from_status
+        string to_status
+        text reason
+    }
+    orders ||--o{ order_status_histories : "order"
+    users |o--o{ order_status_histories : "actor"
+    stock_transfers {
+        bigint id PK
+        string reference
+        bigint segment_id FK
+        bigint source_branch_id FK
+        bigint destination_branch_id FK
+        bigint created_by FK
+        bigint received_by FK
+        string status
+        text notes
+        timestamp dispatched_at
+        timestamp received_at
+    }
+    segments ||--o{ stock_transfers : "segment"
+    branches ||--o{ stock_transfers : "sourceBranch"
+    branches ||--o{ stock_transfers : "destinationBranch"
+    users ||--o{ stock_transfers : "creator"
+    users |o--o{ stock_transfers : "receiver"
+    stock_transfer_items {
+        bigint id PK
+        bigint stock_transfer_id FK
+        bigint product_id FK
+        decimal quantity
+    }
+    stock_transfers ||--o{ stock_transfer_items : "transfer"
+    products ||--o{ stock_transfer_items : "product"
+    stock_movements {
+        bigint id PK
+        bigint product_id FK
+        bigint branch_id FK
+        bigint user_id FK
+        bigint order_id FK
+        bigint transfer_item_id FK
+        string operation_id
+        string type
+        decimal quantity
+        decimal previous_quantity
+        decimal new_quantity
+        text reason
+        string reference
+    }
+    products ||--o{ stock_movements : "product"
+    branches ||--o{ stock_movements : "branch"
+    users |o--o{ stock_movements : "actor"
+    orders |o--o{ stock_movements : "order"
+    stock_transfer_items |o--o{ stock_movements : "transferItem"
+    posts {
+        bigint id PK
+        bigint segment_id FK
+        bigint author_id FK
+        string title
+        string slug
+        text excerpt
+        text content
+        string image
+        string status
+        timestamp published_at
+    }
+    segments |o--o{ posts : "segment"
+    users ||--o{ posts : "author"
+    pages {
+        bigint id PK
+        bigint updated_by FK
+        string title
+        string slug
+        text content
+        json blocks
+        string status
+        string seo_title
+        text seo_description
+        timestamp published_at
+    }
+    users |o--o{ pages : "editor"
+    banners {
+        bigint id PK
+        bigint segment_id FK
+        string title
+        text description
+        string image
+        string alt
+        string button_label
+        string target_url
+        string placement
+        boolean active
+        unsignedInteger sort_order
+        timestamp starts_at
+        timestamp ends_at
+    }
+    segments |o--o{ banners : "segment"
+    contacts {
+        bigint id PK
+        bigint segment_id FK
+        bigint branch_id FK
+        bigint assigned_to FK
+        string name
+        string email
+        string phone
+        string company
+        string type
+        text message
+        string status
+    }
+    segments |o--o{ contacts : "segment"
+    branches |o--o{ contacts : "branch"
+    users |o--o{ contacts : "assignee"
+    team_members {
+        bigint id PK
+        bigint segment_id FK
+        bigint branch_id FK
+        string name
+        string position
+        text bio
+        string image
+        boolean active
+        unsignedInteger sort_order
+    }
+    segments |o--o{ team_members : "segment"
+    branches |o--o{ team_members : "branch"
+    testimonials {
+        bigint id PK
+        bigint segment_id FK
+        string name
+        text content
+        string image
+        boolean active
+        timestamp consented_at
+        unsignedInteger sort_order
+    }
+    segments |o--o{ testimonials : "segment"
+    faqs {
+        bigint id PK
+        bigint segment_id FK
+        string question
+        text answer
+        boolean active
+        unsignedInteger sort_order
+    }
+    segments |o--o{ faqs : "segment"
+    activity_logs {
+        bigint id PK
+        bigint user_id FK
+        string action
+        string model_type
+        unsignedBigInteger model_id
+        json old_values
+        json new_values
+        string ip_address
+        string request_id
+    }
+    users |o--o{ activity_logs : "actor"
+    settings {
+        bigint id PK
+        string key
+        json value
+        string type
+        bigint updated_by FK
+    }
+    users |o--o{ settings : "editor"
+    import_batches {
+        bigint id PK
+        bigint segment_id FK
+        bigint branch_id FK
+        bigint created_by FK
+        string type
+        string status
+        string file_path
+        string error_path
+        unsignedInteger total_rows
+        unsignedInteger processed_rows
+        unsignedInteger failed_rows
+        timestamp completed_at
+    }
+    segments ||--o{ import_batches : "segment"
+    branches |o--o{ import_batches : "branch"
+    users ||--o{ import_batches : "creator"
+    import_rows {
+        bigint id PK
+        bigint import_batch_id FK
+        unsignedInteger row_number
+        string status
+        string operation_id
+        json payload
+        text error
+    }
+    import_batches ||--o{ import_rows : "batch"
+    roles ||--o{ role_has_permissions : grants
+    permissions ||--o{ role_has_permissions : assigned
+    roles ||--o{ model_has_roles : global_roles
+    users ||--o{ model_has_roles : role_owner
+    permissions ||--o{ model_has_permissions : direct
+    users ||--o{ model_has_permissions : permission_owner
+    users ||--o{ notifications : receives
+    users |o--o{ sessions : authenticates
+    users {
+        bigint id PK
+        string name
+        string email UK
+        string password
+        boolean active
+        timestamp email_verified_at
+        string remember_token
+        timestamp created_at
+        timestamp updated_at
+    }
+    roles {
+        bigint id PK
+        string name
+        string guard_name
+        timestamp created_at
+        timestamp updated_at
+    }
+    permissions {
+        bigint id PK
+        string name
+        string guard_name
+        timestamp created_at
+        timestamp updated_at
+    }
+    role_has_permissions {
+        bigint permission_id PK, FK
+        bigint role_id PK, FK
+    }
+    model_has_roles {
+        bigint role_id PK, FK
+        bigint model_id PK
+        string model_type PK
+    }
+    model_has_permissions {
+        bigint permission_id PK, FK
+        bigint model_id PK
+        string model_type PK
+    }
+    notifications {
+        uuid id PK
+        string type
+        string notifiable_type
+        bigint notifiable_id
+        text data
+        timestamp read_at
+        timestamp created_at
+        timestamp updated_at
+    }
+    sessions {
+        string id PK
+        bigint user_id
+        string ip_address
+        text user_agent
+        text payload
+        integer last_activity
+    }
+    password_reset_tokens {
+        string email PK
+        string token
+        timestamp created_at
+    }
+    cache {
+        string key PK
+        text value
+        integer expiration
+    }
+    cache_locks {
+        string key PK
+        string owner
+        integer expiration
+    }
+    jobs {
+        bigint id PK
+        string queue
+        text payload
+        integer attempts
+        integer reserved_at
+        integer available_at
+        integer created_at
+    }
+    job_batches {
+        string id PK
+        string name
+        integer total_jobs
+        integer pending_jobs
+        integer failed_jobs
+        text failed_job_ids
+        text options
+        integer cancelled_at
+        integer created_at
+        integer finished_at
+    }
+    failed_jobs {
+        bigint id PK
+        string uuid UK
+        text connection
+        text queue
+        text payload
+        text exception
+        timestamp failed_at
+    }

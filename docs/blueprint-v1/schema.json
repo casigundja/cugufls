@@ -1,0 +1,1608 @@
+[
+  {
+    "table": "segments",
+    "model": "Segment",
+    "columns": [
+      {
+        "name": "name",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "slug",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "description",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "icon",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "image",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "active",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "sort_order",
+        "type": "unsignedInteger",
+        "nullable": false
+      }
+    ],
+    "unique": [
+      [
+        "slug"
+      ]
+    ],
+    "indexes": []
+  },
+  {
+    "table": "branches",
+    "model": "Branch",
+    "columns": [
+      {
+        "name": "name",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "slug",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "city",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "province",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "address",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "phone",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "whatsapp",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "email",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "latitude",
+        "type": "latitude",
+        "nullable": true
+      },
+      {
+        "name": "longitude",
+        "type": "longitude",
+        "nullable": true
+      },
+      {
+        "name": "opening_hours",
+        "type": "json",
+        "nullable": true
+      },
+      {
+        "name": "active",
+        "type": "boolean",
+        "default": false
+      }
+    ],
+    "unique": [
+      [
+        "slug"
+      ]
+    ],
+    "indexes": []
+  },
+  {
+    "table": "branch_segment",
+    "model": null,
+    "columns": [
+      {
+        "name": "branch_id",
+        "type": "foreignId",
+        "target": "branches",
+        "nullable": false,
+        "relation": "branch"
+      },
+      {
+        "name": "segment_id",
+        "type": "foreignId",
+        "target": "segments",
+        "nullable": false,
+        "relation": "segment"
+      }
+    ],
+    "unique": [
+      [
+        "branch_id",
+        "segment_id"
+      ]
+    ],
+    "indexes": []
+  },
+  {
+    "table": "user_accesses",
+    "model": "UserAccess",
+    "columns": [
+      {
+        "name": "user_id",
+        "type": "foreignId",
+        "target": "users",
+        "nullable": false,
+        "relation": "user"
+      },
+      {
+        "name": "role_id",
+        "type": "foreignId",
+        "nullable": false,
+        "target": "roles",
+        "relation": "role"
+      },
+      {
+        "name": "segment_id",
+        "type": "foreignId",
+        "target": "segments",
+        "nullable": true,
+        "relation": "segment"
+      },
+      {
+        "name": "branch_id",
+        "type": "foreignId",
+        "target": "branches",
+        "nullable": true,
+        "relation": "branch"
+      }
+    ],
+    "unique": [
+      [
+        "user_id",
+        "role_id",
+        "segment_id",
+        "branch_id"
+      ]
+    ],
+    "indexes": [
+      [
+        "user_id",
+        "segment_id",
+        "branch_id"
+      ]
+    ]
+  },
+  {
+    "table": "categories",
+    "model": "Category",
+    "columns": [
+      {
+        "name": "segment_id",
+        "type": "foreignId",
+        "target": "segments",
+        "nullable": false,
+        "relation": "segment"
+      },
+      {
+        "name": "parent_id",
+        "type": "foreignId",
+        "target": "categories",
+        "nullable": true,
+        "relation": "parent"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "slug",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "description",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "image",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "active",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "sort_order",
+        "type": "unsignedInteger",
+        "nullable": false
+      }
+    ],
+    "unique": [
+      [
+        "segment_id",
+        "slug"
+      ]
+    ],
+    "indexes": []
+  },
+  {
+    "table": "brands",
+    "model": "Brand",
+    "columns": [
+      {
+        "name": "name",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "slug",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "image",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "active",
+        "type": "boolean",
+        "default": false
+      }
+    ],
+    "unique": [
+      [
+        "slug"
+      ]
+    ],
+    "indexes": []
+  },
+  {
+    "table": "products",
+    "model": "Product",
+    "columns": [
+      {
+        "name": "segment_id",
+        "type": "foreignId",
+        "target": "segments",
+        "nullable": false,
+        "relation": "segment"
+      },
+      {
+        "name": "category_id",
+        "type": "foreignId",
+        "target": "categories",
+        "nullable": false,
+        "relation": "category"
+      },
+      {
+        "name": "brand_id",
+        "type": "foreignId",
+        "target": "brands",
+        "nullable": true,
+        "relation": "brand"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "slug",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "sku",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "barcode",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "short_description",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "description",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "price",
+        "type": "money",
+        "nullable": true
+      },
+      {
+        "name": "sale_price",
+        "type": "money",
+        "nullable": true
+      },
+      {
+        "name": "cost_price",
+        "type": "money",
+        "nullable": true
+      },
+      {
+        "name": "unit",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "purchase_mode",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "featured",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "active",
+        "type": "boolean",
+        "default": false
+      }
+    ],
+    "unique": [
+      [
+        "slug"
+      ],
+      [
+        "sku"
+      ]
+    ],
+    "indexes": [
+      [
+        "segment_id",
+        "active",
+        "featured"
+      ],
+      [
+        "category_id",
+        "active"
+      ],
+      [
+        "name"
+      ]
+    ]
+  },
+  {
+    "table": "product_images",
+    "model": "ProductImage",
+    "columns": [
+      {
+        "name": "product_id",
+        "type": "foreignId",
+        "target": "products",
+        "nullable": false,
+        "relation": "product"
+      },
+      {
+        "name": "disk",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "path",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "alt",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "sort_order",
+        "type": "unsignedInteger",
+        "nullable": false
+      }
+    ],
+    "unique": [],
+    "indexes": [
+      [
+        "product_id",
+        "sort_order"
+      ]
+    ]
+  },
+  {
+    "table": "inventories",
+    "model": "Inventory",
+    "columns": [
+      {
+        "name": "product_id",
+        "type": "foreignId",
+        "target": "products",
+        "nullable": false,
+        "relation": "product"
+      },
+      {
+        "name": "branch_id",
+        "type": "foreignId",
+        "target": "branches",
+        "nullable": false,
+        "relation": "branch"
+      },
+      {
+        "name": "quantity",
+        "type": "decimal",
+        "nullable": false
+      },
+      {
+        "name": "minimum_quantity",
+        "type": "decimal",
+        "nullable": false
+      },
+      {
+        "name": "maximum_quantity",
+        "type": "decimal",
+        "nullable": true
+      },
+      {
+        "name": "last_counted_at",
+        "type": "timestamp",
+        "nullable": true
+      }
+    ],
+    "unique": [
+      [
+        "product_id",
+        "branch_id"
+      ]
+    ],
+    "indexes": [
+      [
+        "branch_id",
+        "quantity"
+      ]
+    ]
+  },
+  {
+    "table": "customers",
+    "model": "Customer",
+    "columns": [
+      {
+        "name": "name",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "phone",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "email",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "company",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "notes",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "unique": [],
+    "indexes": [
+      [
+        "phone"
+      ],
+      [
+        "email"
+      ]
+    ]
+  },
+  {
+    "table": "services",
+    "model": "Service",
+    "columns": [
+      {
+        "name": "segment_id",
+        "type": "foreignId",
+        "target": "segments",
+        "nullable": false,
+        "relation": "segment"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "slug",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "description",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "price",
+        "type": "money",
+        "nullable": true
+      },
+      {
+        "name": "image",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "active",
+        "type": "boolean",
+        "default": false
+      }
+    ],
+    "unique": [
+      [
+        "slug"
+      ]
+    ],
+    "indexes": []
+  },
+  {
+    "table": "orders",
+    "model": "Order",
+    "columns": [
+      {
+        "name": "public_id",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "segment_id",
+        "type": "foreignId",
+        "target": "segments",
+        "nullable": false,
+        "relation": "segment"
+      },
+      {
+        "name": "branch_id",
+        "type": "foreignId",
+        "target": "branches",
+        "nullable": false,
+        "relation": "branch"
+      },
+      {
+        "name": "customer_id",
+        "type": "foreignId",
+        "target": "customers",
+        "nullable": false,
+        "relation": "customer"
+      },
+      {
+        "name": "assigned_to",
+        "type": "foreignId",
+        "target": "users",
+        "nullable": true,
+        "relation": "assignee"
+      },
+      {
+        "name": "status",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "source",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "currency",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "total",
+        "type": "money",
+        "nullable": true
+      },
+      {
+        "name": "customer_snapshot",
+        "type": "json",
+        "nullable": true
+      },
+      {
+        "name": "notes",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "idempotency_key",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "request_hash",
+        "type": "string",
+        "nullable": true
+      }
+    ],
+    "unique": [
+      [
+        "public_id"
+      ],
+      [
+        "idempotency_key"
+      ]
+    ],
+    "indexes": [
+      [
+        "branch_id",
+        "status",
+        "created_at"
+      ],
+      [
+        "segment_id",
+        "created_at"
+      ]
+    ]
+  },
+  {
+    "table": "order_items",
+    "model": "OrderItem",
+    "columns": [
+      {
+        "name": "order_id",
+        "type": "foreignId",
+        "target": "orders",
+        "nullable": false,
+        "relation": "order"
+      },
+      {
+        "name": "product_id",
+        "type": "foreignId",
+        "target": "products",
+        "nullable": true,
+        "relation": "product"
+      },
+      {
+        "name": "service_id",
+        "type": "foreignId",
+        "target": "services",
+        "nullable": true,
+        "relation": "service"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "sku",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "unit",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "quantity",
+        "type": "decimal",
+        "nullable": false
+      },
+      {
+        "name": "unit_price",
+        "type": "money",
+        "nullable": true
+      },
+      {
+        "name": "line_total",
+        "type": "money",
+        "nullable": true
+      },
+      {
+        "name": "customization",
+        "type": "json",
+        "nullable": true
+      }
+    ],
+    "unique": [],
+    "indexes": []
+  },
+  {
+    "table": "order_status_histories",
+    "model": "OrderStatusHistory",
+    "columns": [
+      {
+        "name": "order_id",
+        "type": "foreignId",
+        "target": "orders",
+        "nullable": false,
+        "relation": "order"
+      },
+      {
+        "name": "user_id",
+        "type": "foreignId",
+        "target": "users",
+        "nullable": true,
+        "relation": "actor"
+      },
+      {
+        "name": "from_status",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "to_status",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "reason",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "unique": [],
+    "indexes": [
+      [
+        "order_id",
+        "created_at"
+      ]
+    ],
+    "createdOnly": true
+  },
+  {
+    "table": "stock_transfers",
+    "model": "StockTransfer",
+    "columns": [
+      {
+        "name": "reference",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "segment_id",
+        "type": "foreignId",
+        "target": "segments",
+        "nullable": false,
+        "relation": "segment"
+      },
+      {
+        "name": "source_branch_id",
+        "type": "foreignId",
+        "target": "branches",
+        "nullable": false,
+        "relation": "sourceBranch"
+      },
+      {
+        "name": "destination_branch_id",
+        "type": "foreignId",
+        "target": "branches",
+        "nullable": false,
+        "relation": "destinationBranch"
+      },
+      {
+        "name": "created_by",
+        "type": "foreignId",
+        "target": "users",
+        "nullable": false,
+        "relation": "creator"
+      },
+      {
+        "name": "received_by",
+        "type": "foreignId",
+        "target": "users",
+        "nullable": true,
+        "relation": "receiver"
+      },
+      {
+        "name": "status",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "notes",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "dispatched_at",
+        "type": "timestamp",
+        "nullable": true
+      },
+      {
+        "name": "received_at",
+        "type": "timestamp",
+        "nullable": true
+      }
+    ],
+    "unique": [
+      [
+        "reference"
+      ]
+    ],
+    "indexes": [
+      [
+        "source_branch_id",
+        "status"
+      ],
+      [
+        "destination_branch_id",
+        "status"
+      ]
+    ]
+  },
+  {
+    "table": "stock_transfer_items",
+    "model": "StockTransferItem",
+    "columns": [
+      {
+        "name": "stock_transfer_id",
+        "type": "foreignId",
+        "target": "stock_transfers",
+        "nullable": false,
+        "relation": "transfer"
+      },
+      {
+        "name": "product_id",
+        "type": "foreignId",
+        "target": "products",
+        "nullable": false,
+        "relation": "product"
+      },
+      {
+        "name": "quantity",
+        "type": "decimal",
+        "nullable": false
+      }
+    ],
+    "unique": [
+      [
+        "stock_transfer_id",
+        "product_id"
+      ]
+    ],
+    "indexes": []
+  },
+  {
+    "table": "stock_movements",
+    "model": "StockMovement",
+    "columns": [
+      {
+        "name": "product_id",
+        "type": "foreignId",
+        "target": "products",
+        "nullable": false,
+        "relation": "product"
+      },
+      {
+        "name": "branch_id",
+        "type": "foreignId",
+        "target": "branches",
+        "nullable": false,
+        "relation": "branch"
+      },
+      {
+        "name": "user_id",
+        "type": "foreignId",
+        "target": "users",
+        "nullable": true,
+        "relation": "actor"
+      },
+      {
+        "name": "order_id",
+        "type": "foreignId",
+        "target": "orders",
+        "nullable": true,
+        "relation": "order"
+      },
+      {
+        "name": "transfer_item_id",
+        "type": "foreignId",
+        "target": "stock_transfer_items",
+        "nullable": true,
+        "relation": "transferItem"
+      },
+      {
+        "name": "operation_id",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "type",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "quantity",
+        "type": "decimal",
+        "nullable": false
+      },
+      {
+        "name": "previous_quantity",
+        "type": "decimal",
+        "nullable": false
+      },
+      {
+        "name": "new_quantity",
+        "type": "decimal",
+        "nullable": false
+      },
+      {
+        "name": "reason",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "reference",
+        "type": "string",
+        "nullable": true
+      }
+    ],
+    "unique": [
+      [
+        "operation_id"
+      ],
+      [
+        "transfer_item_id",
+        "type"
+      ]
+    ],
+    "indexes": [
+      [
+        "product_id",
+        "branch_id",
+        "created_at"
+      ],
+      [
+        "type",
+        "created_at"
+      ]
+    ],
+    "createdOnly": true
+  },
+  {
+    "table": "posts",
+    "model": "Post",
+    "columns": [
+      {
+        "name": "segment_id",
+        "type": "foreignId",
+        "target": "segments",
+        "nullable": true,
+        "relation": "segment"
+      },
+      {
+        "name": "author_id",
+        "type": "foreignId",
+        "target": "users",
+        "nullable": false,
+        "relation": "author"
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "slug",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "excerpt",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "content",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "image",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "status",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "published_at",
+        "type": "timestamp",
+        "nullable": true
+      }
+    ],
+    "unique": [
+      [
+        "slug"
+      ]
+    ],
+    "indexes": [
+      [
+        "status",
+        "published_at"
+      ]
+    ]
+  },
+  {
+    "table": "pages",
+    "model": "Page",
+    "columns": [
+      {
+        "name": "updated_by",
+        "type": "foreignId",
+        "target": "users",
+        "nullable": true,
+        "relation": "editor"
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "slug",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "content",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "blocks",
+        "type": "json",
+        "nullable": true
+      },
+      {
+        "name": "status",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "seo_title",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "seo_description",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "published_at",
+        "type": "timestamp",
+        "nullable": true
+      }
+    ],
+    "unique": [
+      [
+        "slug"
+      ]
+    ],
+    "indexes": []
+  },
+  {
+    "table": "banners",
+    "model": "Banner",
+    "columns": [
+      {
+        "name": "segment_id",
+        "type": "foreignId",
+        "target": "segments",
+        "nullable": true,
+        "relation": "segment"
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "description",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "image",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "alt",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "button_label",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "target_url",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "placement",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "active",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "sort_order",
+        "type": "unsignedInteger",
+        "nullable": false
+      },
+      {
+        "name": "starts_at",
+        "type": "timestamp",
+        "nullable": true
+      },
+      {
+        "name": "ends_at",
+        "type": "timestamp",
+        "nullable": true
+      }
+    ],
+    "unique": [],
+    "indexes": [
+      [
+        "placement",
+        "active"
+      ]
+    ]
+  },
+  {
+    "table": "contacts",
+    "model": "Contact",
+    "columns": [
+      {
+        "name": "segment_id",
+        "type": "foreignId",
+        "target": "segments",
+        "nullable": true,
+        "relation": "segment"
+      },
+      {
+        "name": "branch_id",
+        "type": "foreignId",
+        "target": "branches",
+        "nullable": true,
+        "relation": "branch"
+      },
+      {
+        "name": "assigned_to",
+        "type": "foreignId",
+        "target": "users",
+        "nullable": true,
+        "relation": "assignee"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "email",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "phone",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "company",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "type",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "message",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "status",
+        "type": "string",
+        "nullable": false
+      }
+    ],
+    "unique": [],
+    "indexes": [
+      [
+        "status",
+        "created_at"
+      ]
+    ]
+  },
+  {
+    "table": "team_members",
+    "model": "TeamMember",
+    "columns": [
+      {
+        "name": "segment_id",
+        "type": "foreignId",
+        "target": "segments",
+        "nullable": true,
+        "relation": "segment"
+      },
+      {
+        "name": "branch_id",
+        "type": "foreignId",
+        "target": "branches",
+        "nullable": true,
+        "relation": "branch"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "position",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "bio",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "image",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "active",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "sort_order",
+        "type": "unsignedInteger",
+        "nullable": false
+      }
+    ],
+    "unique": [],
+    "indexes": []
+  },
+  {
+    "table": "testimonials",
+    "model": "Testimonial",
+    "columns": [
+      {
+        "name": "segment_id",
+        "type": "foreignId",
+        "target": "segments",
+        "nullable": true,
+        "relation": "segment"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "content",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "image",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "active",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "consented_at",
+        "type": "timestamp",
+        "nullable": true
+      },
+      {
+        "name": "sort_order",
+        "type": "unsignedInteger",
+        "nullable": false
+      }
+    ],
+    "unique": [],
+    "indexes": []
+  },
+  {
+    "table": "faqs",
+    "model": "Faq",
+    "columns": [
+      {
+        "name": "segment_id",
+        "type": "foreignId",
+        "target": "segments",
+        "nullable": true,
+        "relation": "segment"
+      },
+      {
+        "name": "question",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "answer",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "active",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "sort_order",
+        "type": "unsignedInteger",
+        "nullable": false
+      }
+    ],
+    "unique": [],
+    "indexes": []
+  },
+  {
+    "table": "activity_logs",
+    "model": "ActivityLog",
+    "columns": [
+      {
+        "name": "user_id",
+        "type": "foreignId",
+        "target": "users",
+        "nullable": true,
+        "relation": "actor"
+      },
+      {
+        "name": "action",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "model_type",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "model_id",
+        "type": "unsignedBigInteger",
+        "nullable": false
+      },
+      {
+        "name": "old_values",
+        "type": "json",
+        "nullable": true
+      },
+      {
+        "name": "new_values",
+        "type": "json",
+        "nullable": true
+      },
+      {
+        "name": "ip_address",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "request_id",
+        "type": "string",
+        "nullable": true
+      }
+    ],
+    "unique": [],
+    "indexes": [
+      [
+        "model_type",
+        "model_id"
+      ],
+      [
+        "user_id",
+        "created_at"
+      ]
+    ],
+    "createdOnly": true
+  },
+  {
+    "table": "settings",
+    "model": "Setting",
+    "columns": [
+      {
+        "name": "key",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "value",
+        "type": "json",
+        "nullable": true
+      },
+      {
+        "name": "type",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "updated_by",
+        "type": "foreignId",
+        "target": "users",
+        "nullable": true,
+        "relation": "editor"
+      }
+    ],
+    "unique": [
+      [
+        "key"
+      ]
+    ],
+    "indexes": []
+  },
+  {
+    "table": "import_batches",
+    "model": "ImportBatch",
+    "columns": [
+      {
+        "name": "segment_id",
+        "type": "foreignId",
+        "target": "segments",
+        "nullable": false,
+        "relation": "segment"
+      },
+      {
+        "name": "branch_id",
+        "type": "foreignId",
+        "target": "branches",
+        "nullable": true,
+        "relation": "branch"
+      },
+      {
+        "name": "created_by",
+        "type": "foreignId",
+        "target": "users",
+        "nullable": false,
+        "relation": "creator"
+      },
+      {
+        "name": "type",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "status",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "file_path",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "error_path",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "total_rows",
+        "type": "unsignedInteger",
+        "nullable": false
+      },
+      {
+        "name": "processed_rows",
+        "type": "unsignedInteger",
+        "nullable": false
+      },
+      {
+        "name": "failed_rows",
+        "type": "unsignedInteger",
+        "nullable": false
+      },
+      {
+        "name": "completed_at",
+        "type": "timestamp",
+        "nullable": true
+      }
+    ],
+    "unique": [],
+    "indexes": []
+  },
+  {
+    "table": "import_rows",
+    "model": "ImportRow",
+    "columns": [
+      {
+        "name": "import_batch_id",
+        "type": "foreignId",
+        "target": "import_batches",
+        "nullable": false,
+        "relation": "batch"
+      },
+      {
+        "name": "row_number",
+        "type": "unsignedInteger",
+        "nullable": false
+      },
+      {
+        "name": "status",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "operation_id",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "payload",
+        "type": "json",
+        "nullable": true
+      },
+      {
+        "name": "error",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "unique": [
+      [
+        "import_batch_id",
+        "row_number"
+      ],
+      [
+        "operation_id"
+      ]
+    ],
+    "indexes": []
+  }
+]
